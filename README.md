@@ -1,4 +1,4 @@
-# Framework de Precificação de Títulos Resgatáveis: Uma Abordagem Comparativa
+# Precificação de títulos corporativos resgatáveis (callable): comparação entre árvore recombinante, EDP e simulação de Monte Carlo sob modelos unifatoriais de taxa curta
 
 ![Language](https://img.shields.io/badge/python-3.9%2B-blue?style=for-the-badge&logo=python)
 ![Library](https://img.shields.io/badge/QuantLib-1.30%2B-green?style=for-the-badge)
