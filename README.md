@@ -6,6 +6,7 @@
 ![License](https://img.shields.io/badge/License-MIT-lightgrey?style=for-the-badge)
 
 ##  Objetivo
+O projeto propõe e implementa um framework para análise comparativa de modelos de precificação de Títulos Corporativos com Opção de Recompra (Callable Bonds).
 
 O objetivo central da pesquisa é isolar e quantificar o **Risco de Modelo** contrastando abordagens de **Não-Arbitragem** (Hull-White, Black-Karasinski) e **Equilíbrio** (Cox-Ingersoll-Ross). A metodologia privilegia a implementação manual (*from scratch*) dos motores de cálculo (EDP e Árvores), utilizando a biblioteca de mercado *QuantLib* apenas como *benchmark* de verificação.
 
