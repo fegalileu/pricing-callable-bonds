@@ -46,26 +46,23 @@ Os artefatos gerados (csv, plots) serão salvos na pasta `outputs/`.
 Três paradigmas de modelagem foram implementados e confrontados:
 
 ### 1. Modelo Hull-White (HW) - 1 Fator
-* **Dinâmica:** Gaussiana com Reversão à Média Time-Dependent.
-
+* **Dinâmica:** Gaussiana com Reversão à Média Time-Dependent.<br>
   $$dr_t = [\theta(t) - a r_t]dt + \sigma dW_t$$
-
+<br>
 * **Implementação:** Simulação de Monte Carlo com regressão de Mínimos Quadrados (LSMC) para a fronteira de exercício ótimo (Bermudan/American).
 * **Técnica:** Uso de *Common Random Numbers (CRN)* para cálculo estável de Gregas (Duration/Convexity).
 
 ### 2. Modelo Black-Karasinski (BK)
-* **Dinâmica:** Log-normal na taxa curta (garante $r_t > 0$).
-
+* **Dinâmica:** Log-normal na taxa curta (garante $r_t > 0$).<br>
   $$d(\ln r_t) = [\theta(t) - a \ln r_t]dt + \sigma dW_t$$
-
+<br>
 * **Implementação:** Árvore Trinomial Recombinante.
 * **Técnica:** Calibração exata via *Forward Induction* no termo de drift $\theta(t)$ para recuperar a estrutura a termo inicial.
 
 ### 3. Modelo Cox-Ingersoll-Ross (CIR)
-* **Dinâmica:** Difusão de Raiz Quadrada (Feller condition).
-
+* **Dinâmica:** Difusão de Raiz Quadrada (Feller condition).<br>
   $$dr_t = \kappa(\theta - r_t)dt + \sigma \sqrt{r_t} dW_t$$
-
+<br>
 * **Implementação:** Método de Diferenças Finitas (FDM) implícito (Crank-Nicolson) para solução da EDP de precificação.
 * **Técnica:** Condições de contorno reflexivas em $r=0$ e lineares assintóticas para grandes taxas.
 
