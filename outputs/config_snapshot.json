@@ -1,0 +1,18 @@
+{
+  "bump_bps": 1.0,
+  "kwf_steps_year": 52,
+  "mc_paths": 50000,
+  "mc_seed": 12345,
+  "mc_steps_year": 24,
+  "numpy_seed": 42,
+  "oas_bps": 73.0,
+  "pde_grid_size": 800,
+  "pde_r_max": 0.8,
+  "pde_r_min": 1e-05,
+  "pde_shift_theta_with_curve": true,
+  "pde_steps_year": 100,
+  "ql_grid_size": 128,
+  "risk_bump_bps": 1.0,
+  "suppress_warnings": true,
+  "val_date": "September 10th, 2025"
+}
