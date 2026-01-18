@@ -47,19 +47,25 @@ Três paradigmas de modelagem foram implementados e confrontados:
 
 ### 1. Modelo Hull-White (HW) - 1 Fator
 * **Dinâmica:** Gaussiana com Reversão à Média Time-Dependent.
+
   $$dr_t = [\theta(t) - a r_t]dt + \sigma dW_t$$
+
 * **Implementação:** Simulação de Monte Carlo com regressão de Mínimos Quadrados (LSMC) para a fronteira de exercício ótimo (Bermudan/American).
 * **Técnica:** Uso de *Common Random Numbers (CRN)* para cálculo estável de Gregas (Duration/Convexity).
 
 ### 2. Modelo Black-Karasinski (BK)
 * **Dinâmica:** Log-normal na taxa curta (garante $r_t > 0$).
+
   $$d(\ln r_t) = [\theta(t) - a \ln r_t]dt + \sigma dW_t$$
+
 * **Implementação:** Árvore Trinomial Recombinante.
 * **Técnica:** Calibração exata via *Forward Induction* no termo de drift $\theta(t)$ para recuperar a estrutura a termo inicial.
 
 ### 3. Modelo Cox-Ingersoll-Ross (CIR)
 * **Dinâmica:** Difusão de Raiz Quadrada (Feller condition).
+
   $$dr_t = \kappa(\theta - r_t)dt + \sigma \sqrt{r_t} dW_t$$
+
 * **Implementação:** Método de Diferenças Finitas (FDM) implícito (Crank-Nicolson) para solução da EDP de precificação.
 * **Técnica:** Condições de contorno reflexivas em $r=0$ e lineares assintóticas para grandes taxas.
 
@@ -67,18 +73,21 @@ Três paradigmas de modelagem foram implementados e confrontados:
 
 ## 📊 Principais Resultados
 
-A tabela a seguir apresenta os resultados de precificação para um título comparável ao **Microsoft Corp. Callable 2035**, calibrado com curva SOFR e spread de crédito (OAS) de 75bps.
+A tabela a seguir apresenta os resultados de precificação para um título comparável ao **Microsoft Corp. Callable 2035**, calibrado com curva SOFR e spread de crédito (OAS) de 73bps.
 
 | Modelo / Método Numérico | Preço ($) | Duration | Convexidade | Status |
 | :--- | :---: | :---: | :---: | :--- |
-| **Straight Bond (Benchmark)** | **92.36** | **8.70** | **84.61** | *Valor Teórico S/ Opção* |
-| Hull-White (LSMC Manual) | 91.63 | 8.35 | 77.81 | ✅ Validado |
-| Hull-White (QuantLib Tree) | 92.03 | 8.47 | 80.21 | ✅ Validado |
-| Black-Karasinski (Tree Manual) | 91.30 | 8.48 | 82.63 | ✅ Validado |
-| **CIR (PDE Manual)** | **97.75** | **7.85** | **64.67** | ⚠️ **Divergência Esperada** |
+| **Straight Bond (Benchmark)** | **93.32** | **8.73** | **85.02** | *Valor Teórico Sem Opção* |
+| Hull-White (LSMC Manual) | 93.55 | 8.23  | 75.40 | ✅ Validado |
+| Hull-White (QuantLib Tree) | 92.97 | 8.44 | 79.41 | ✅ Validado |
+| Black-Karasinski (Tree Manual) | 93.17 | 8.34 | 80.05 | ✅ Validado |
+| Black-Karasinski (QuantLib Tree) | 92.86 | 8.48 | 82.58 | ✅ Validado |
+| **CIR (PDE Manual)** | **98.42** | **7.73** | **56.45** | ⚠️ **Divergência Esperada** |
+| CIR (QuantLib Tree) | 93.32 | 8.73 | 80.05 | ✅ Validado |
+
 
 ### Discussão sobre o Modelo CIR
-A discrepância observada no modelo CIR (**97.75** vs **~91.60**) ilustra o **Risco de Modelo**. O CIR, sendo um modelo de equilíbrio, força a reversão da taxa para uma média histórica de longo prazo ($\theta$). Em cenários onde a curva de juros futura (Forward) está precificando taxas muito acima dessa média histórica, o modelo subestima as taxas de desconto, superavaliando o preço do título. Isso confirma a inadequação de modelos de equilíbrio puro para *pricing* ativo sem a extensão de deslocamento determinístico (Ex-CIR).
+A discrepância observada no modelo CIR (**98.42** vs **93.32**) ilustra o **Risco de Modelo**. O CIR, sendo um modelo de equilíbrio, força a reversão da taxa para uma média histórica de longo prazo ($\theta$). Em cenários onde a curva de juros futura (Forward) está precificando taxas muito acima dessa média histórica, o modelo subestima as taxas de desconto, superavaliando o preço do título. Isso confirma a inadequação de modelos de equilíbrio puro para *pricing* ativo sem a extensão de deslocamento determinístico (Ex-CIR).
 
 ---
 
