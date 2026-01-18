@@ -23,7 +23,7 @@ Para garantir a reprodutibilidade dos resultados apresentados na monografia, sig
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/seu-usuario/callable-bond-pricing.git
+git clone https://github.com/fegalileu/pricing-callable-bonds.git
 cd callable-bond-pricing
 
 # 2. Instale as dependências listadas
