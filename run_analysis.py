@@ -77,10 +77,10 @@ def main():
     p_cir = calib.calibrate_cir(cir_vols)
     print(f"CIR: theta={p_cir['theta']:.4f}, k={p_cir['k']:.4f}, sigma={p_cir['sigma']:.4f}")
 
-    p_kwf = calib.calibrate_kwf(hw_vols)
-    print(f"KWF: a={p_kwf['a']:.4f}, sigma={p_kwf['sigma']:.4f}")
+    p_bk = calib.calibrate_bk(hw_vols)
+    print(f"BK: a={p_bk['a']:.4f}, sigma={p_bk['sigma']:.4f}")
 
-    calib_params = {"HW": p_hw, "CIR": p_cir, "KWF": p_kwf}
+    calib_params = {"HW": p_hw, "CIR": p_cir, "BK": p_bk}
 
     # -------------------------------------------------------------------------
     # 3. Price + risk metrics
@@ -98,8 +98,8 @@ def main():
         ("HW (QL Tree)", p_hw, "HW_QL_TREE"),
         ("CIR (PDE Manual)", p_cir, "CIR_PDE"),
         ("CIR (QL Tree)", p_cir, "CIR_QL_TREE"),
-        ("KWF (Manual Tree)", p_kwf, "KWF_MANUAL"),
-        ("KWF (QL Tree)", p_kwf, "KWF_QL_TREE"),
+        ("BK (Manual Tree)", p_bk, "BK_MANUAL"),
+        ("BK (QL Tree)", p_bk, "BK_QL_TREE"),
     ]
 
     print(f"{'METODO':<25} | {'PRICE':<10} | {'DUR':<10} | {'CONV':<10}")

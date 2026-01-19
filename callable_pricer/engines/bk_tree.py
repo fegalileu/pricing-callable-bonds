@@ -5,8 +5,8 @@ from scipy import optimize
 from ..utils import DateUtils
 
 
-class KWFManualTreeEngine:
-    """Manual KWF-style recombining tree for callable bonds.
+class BKManualTreeEngine:
+    """Manual BK-style recombining tree for callable bonds.
 
     The forward calibration (solving for alpha_t each step) is kept close to the
     validated prototype: alpha is chosen so the tree matches the discount factor
@@ -38,7 +38,7 @@ class KWFManualTreeEngine:
 
         # Cache geometry between bumps
         if state_cache is None:
-            dt = 1.0 / float(self.cfg.kwf_steps_year)
+            dt = 1.0 / float(self.cfg.bk_steps_year)
             dx = sigma * np.sqrt(3.0 * dt)
             N = int(T / dt) + 2
             j_max = min(int(6.0 / (a * dt)) + 1, 150) if a > 1e-12 else 150
@@ -101,7 +101,7 @@ class KWFManualTreeEngine:
         coupon_rate = float(bond_data['coupon_rate'])
         payments_per_year = float(self._payments_per_year(bond_data['coupon_frequency']))
         coupon_amt = face * coupon_rate / payments_per_year
-
+        
         issue = DateUtils.to_ql_date(bond_data['issue_date'])
         period = DateUtils.ensure_period(bond_data['coupon_frequency'])
         sch = ql.Schedule(

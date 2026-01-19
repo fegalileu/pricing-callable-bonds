@@ -1,6 +1,6 @@
 import QuantLib as ql
 
-from .engines import CIRPDEEngine, HullWhiteLSMCEngine, KWFManualTreeEngine
+from .engines import CIRPDEEngine, HullWhiteLSMCEngine, BKManualTreeEngine
 
 
 class MasterPricer:
@@ -82,8 +82,8 @@ class MasterPricer:
             )
             return float(dirty - accrued), sc
 
-        if method == "KWF_MANUAL":
-            dirty, sc = KWFManualTreeEngine(self.cfg).price(
+        if method == "BK_MANUAL":
+            dirty, sc = BKManualTreeEngine(self.cfg).price(
                 ts_use, self.bond_spec.to_engine_bond_data(), params, state_cache
             )
             return float(dirty - accrued), sc
@@ -98,7 +98,7 @@ class MasterPricer:
                     model = ql.ExtendedCoxIngersollRoss(
                         ts_use, params["theta"], params["k"], params["sigma"], r0
                     )
-                elif method == "KWF_QL_TREE":
+                elif method == "BK_QL_TREE":
                     model = ql.BlackKarasinski(ts_use, params["a"], params["sigma"])
                 else:
                     return 0.0, None

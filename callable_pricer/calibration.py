@@ -8,7 +8,7 @@ class Calibrator:
     The calibration routines are intentionally pragmatic:
     - Hull-White is calibrated to a set of swaptions with NORMAL vols.
     - CIR is calibrated to a subset of cap vols (normal) via differential evolution.
-    - KWF proxy uses Black-Karasinski calibrated to a small subset of swaptions
+    - BK proxy uses Black-Karasinski calibrated to a small subset of swaptions
       after converting normal vol -> lognormal vol via a simple ATM conversion.
 
     These choices are meant to keep the project runnable and aligned with the validated
@@ -151,8 +151,8 @@ class Calibrator:
             'r0': float(r0),
         }
 
-    def calibrate_kwf(self, data):
-        """Calibrate a KWF proxy via Black-Karasinski + tree swaption engine.
+    def calibrate_bk(self, data):
+        """Calibrate a BK proxy via Black-Karasinski + tree swaption engine.
 
         The prototype uses a very simple conversion from NORMAL vol to lognormal vol:
             vol_lognormal ≈ vol_normal / ATM

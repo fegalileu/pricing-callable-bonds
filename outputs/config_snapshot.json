@@ -1,6 +1,6 @@
 {
+  "bk_steps_year": 52,
   "bump_bps": 1.0,
-  "kwf_steps_year": 52,
   "mc_paths": 50000,
   "mc_seed": 12345,
   "mc_steps_year": 24,

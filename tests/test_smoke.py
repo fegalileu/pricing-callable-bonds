@@ -44,7 +44,7 @@ def test_smoke_run():
     calib = Calibrator(ts)
     p_hw = calib.calibrate_hw(hw_vols)
     p_cir = calib.calibrate_cir(cir_vols)
-    p_kwf = calib.calibrate_kwf(hw_vols)
+    p_bk = calib.calibrate_bk(hw_vols)
 
     pricer = MasterPricer(ts, bond, cfg)
     oas = cfg.oas_bps / 10000.0
@@ -54,7 +54,7 @@ def test_smoke_run():
         ('STRAIGHT BOND', None),
         ('HW_LSMC', p_hw),
         ('CIR_PDE', p_cir),
-        ('KWF_MANUAL', p_kwf),
+        ('BK_MANUAL', p_bk),
     ]:
         p, d, c = pricer.metrics(params, method, oas)
         assert abs(p) < 1e6

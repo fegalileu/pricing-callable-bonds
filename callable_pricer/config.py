@@ -55,9 +55,9 @@ class AppConfig:
         self.pde_shift_theta_with_curve = True
 
         # ----------------
-        # Manual Tree (KWF-like)
+        # Manual Tree (BK-like)
         # ----------------
-        self.kwf_steps_year = 52  # semanal
+        self.bk_steps_year = 52  # semanal
 
         # ----------------
         # QuantLib Tree engines (reference)
