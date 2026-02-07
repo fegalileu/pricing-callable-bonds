@@ -102,8 +102,8 @@ def main():
         ("BK (QL Tree)", p_bk, "BK_QL_TREE"),
     ]
 
-    print(f"{'METODO':<25} | {'PRICE':<10} | {'DUR':<10} | {'CONV':<10}")
-    print("-" * 65)
+    print(f"{'METODO':<25} | {'PRICE':<10} | {'DUR':<10} | {'CONV':<10} | {'SE':<10}")
+    print("-" * 78)
 
     results = []
     hw_state_cache = None
@@ -111,17 +111,17 @@ def main():
     for label, params, method in scenarios:
         try:
             if method == "HW_LSMC":
-                price, dur, conv, state = pricer.metrics(params, method, oas_bps / 10000.0, return_state=True)
+                price, dur, conv, se, state = pricer.metrics(params, method, oas_bps / 10000.0, return_state=True)
                 hw_state_cache = state
             else:
-                price, dur, conv = pricer.metrics(params, method, oas_bps / 10000.0)
+                price, dur, conv, se = pricer.metrics(params, method, oas_bps / 10000.0)
 
-            print(f"{label:<25} | {price:<10.4f} | {dur:<10.4f} | {conv:<10.4f}")
-            results.append({"method": label, "price": price, "duration": dur, "convexity": conv})
+            print(f"{label:<25} | {price:<10.4f} | {dur:<10.4f} | {conv:<10.4f} | {se:<10.4f}")
+            results.append({"method": label, "price": price, "duration": dur, "convexity": conv, "std_error": se})
 
         except Exception as e:
             print(f"{label:<25} | ERRO: {str(e)}")
-            results.append({"method": label, "price": float("nan"), "duration": float("nan"), "convexity": float("nan")})
+            results.append({"method": label, "price": float("nan"), "duration": float("nan"), "convexity": float("nan"), "std_error": float("nan")})
 
     results_df = pd.DataFrame(results)
 

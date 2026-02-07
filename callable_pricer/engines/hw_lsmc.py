@@ -190,4 +190,6 @@ class HullWhiteLSMCEngine:
 
                 V = np.where(exercise, strike + curr_amt, V)
 
-        return float(np.mean(V)), state_cache
+        # Return Standard Error of the Mean (SEM) = std(V) / sqrt(N)
+        # This represents the statistical uncertainty of the estimated price.
+        return float(np.mean(V)), float(np.std(V) / np.sqrt(n_paths)), state_cache

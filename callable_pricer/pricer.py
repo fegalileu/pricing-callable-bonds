@@ -60,33 +60,33 @@ class MasterPricer:
 
         Returns
         -------
-        (clean_price, state_cache)
+        (clean_price, std_dev, state_cache)
         """
         ts_use = self._make_ts_with_oas(oas_decimal)
 
         if method == "STRAIGHT BOND":
             self.ql_straight.setPricingEngine(ql.DiscountingBondEngine(ts_use))
-            return float(self.ql_straight.cleanPrice()), None
+            return float(self.ql_straight.cleanPrice()), 0.0, None
 
         accrued = float(self.ql_straight.accruedAmount())
 
         if method == "HW_LSMC":
-            dirty, sc = HullWhiteLSMCEngine(self.cfg).price(
+            dirty, std, sc = HullWhiteLSMCEngine(self.cfg).price(
                 ts_use, self.bond_spec.to_engine_bond_data(), params, state_cache
             )
-            return float(dirty - accrued), sc
+            return float(dirty - accrued), std, sc
 
         if method == "CIR_PDE":
             dirty, sc = CIRPDEEngine(self.cfg).price(
                 ts_use, self.bond_spec.to_engine_bond_data(), params, state_cache
             )
-            return float(dirty - accrued), sc
+            return float(dirty - accrued), 0.0, sc
 
         if method == "BK_MANUAL":
             dirty, sc = BKManualTreeEngine(self.cfg).price(
                 ts_use, self.bond_spec.to_engine_bond_data(), params, state_cache
             )
-            return float(dirty - accrued), sc
+            return float(dirty - accrued), 0.0, sc
 
         # QuantLib tree references
         if "QL_TREE" in method:
@@ -101,16 +101,16 @@ class MasterPricer:
                 elif method == "BK_QL_TREE":
                     model = ql.BlackKarasinski(ts_use, params["a"], params["sigma"])
                 else:
-                    return 0.0, None
+                    return 0.0, 0.0, None
 
                 self.ql_callable.setPricingEngine(
                     ql.TreeCallableFixedRateBondEngine(model, int(self.cfg.ql_grid_size))
                 )
-                return float(self.ql_callable.cleanPrice()), None
+                return float(self.ql_callable.cleanPrice()), 0.0, None
             except Exception:
-                return 0.0, None
+                return 0.0, 0.0, None
 
-        return 0.0, None
+        return 0.0, 0.0, None
 
     def metrics(self, params, method, oas_decimal, state_cache=None, return_state=False):
         """Return (price, effective duration, effective convexity).
@@ -129,18 +129,18 @@ class MasterPricer:
         return_state : bool
             If True, also returns the base-run cache.
         """
-        P0, state = self.calculate(params, method, oas_decimal, state_cache)
+        P0, std0, state = self.calculate(params, method, oas_decimal, state_cache)
         if P0 <= 1e-8:
             if return_state:
-                return 0.0, 0.0, 0.0, state
-            return 0.0, 0.0, 0.0
+                return 0.0, 0.0, 0.0, 0.0, state
+            return 0.0, 0.0, 0.0, 0.0
 
         # Parallel bump size used for risk metrics (default 1bp, see AppConfig).
         dy = float(getattr(self.cfg, "risk_bump_bps", self.cfg.bump_bps)) / 10000.0
         if abs(dy) < 1e-12:
             if return_state:
-                return float(P0), 0.0, 0.0, state
-            return float(P0), 0.0, 0.0
+                return float(P0), 0.0, 0.0, float(std0), state
+            return float(P0), 0.0, 0.0, float(std0)
 
         base_ptr = self.ts_base.currentLink()
         try:
@@ -150,7 +150,7 @@ class MasterPricer:
             )
             ts_up.enableExtrapolation()
             self.ts_base.linkTo(ts_up)
-            Pup, _ = self.calculate(params, method, oas_decimal, state)
+            Pup, _, _ = self.calculate(params, method, oas_decimal, state)
 
             ts_dn = ql.ZeroSpreadedTermStructure(
                 ql.YieldTermStructureHandle(base_ptr),
@@ -158,7 +158,7 @@ class MasterPricer:
             )
             ts_dn.enableExtrapolation()
             self.ts_base.linkTo(ts_dn)
-            Pdn, _ = self.calculate(params, method, oas_decimal, state)
+            Pdn, _, _ = self.calculate(params, method, oas_decimal, state)
         finally:
             self.ts_base.linkTo(base_ptr)
 
@@ -166,5 +166,5 @@ class MasterPricer:
         conv = (Pup + Pdn - 2.0 * P0) / (P0 * (dy ** 2))
 
         if return_state:
-            return float(P0), float(dur), float(conv), state
-        return float(P0), float(dur), float(conv)
+            return float(P0), float(dur), float(conv), float(std0), state
+        return float(P0), float(dur), float(conv), float(std0)

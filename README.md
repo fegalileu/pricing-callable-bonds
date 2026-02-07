@@ -73,7 +73,7 @@ A tabela a seguir apresenta os resultados de precificação para um título comp
 | Modelo / Método Numérico | Preço ($) | Duration | Convexidade | Status |
 | :--- | :---: | :---: | :---: | :--- |
 | **Straight Bond (Benchmark)** | **93.32** | **8.73** | **85.02** | *Valor Teórico Sem Opção* |
-| Hull-White (LSMC Manual) | 93.55 | 8.23  | 75.40 | ✅ Validado |
+| Hull-White (LSMC Manual) | 93.55 $\pm$ 0.047 | 8.23  | 75.40 | ✅ Validado |
 | Hull-White (QuantLib Tree) | 92.97 | 8.44 | 79.41 | ✅ Validado |
 | Black-Karasinski (Tree Manual) | 93.17 | 8.34 | 80.05 | ✅ Validado |
 | Black-Karasinski (QuantLib Tree) | 92.86 | 8.48 | 82.58 | ✅ Validado |

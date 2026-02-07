@@ -46,7 +46,7 @@ def price_vs_volatility(pricer, scenarios, oas_decimal, vol_multipliers):
         row = {"vol_multiplier": float(m)}
         for label, params, method in scenarios:
             p = _scale_sigma(params, m)
-            price, _ = pricer.calculate(p, method, oas_decimal, state_cache=None)
+            price, _, _ = pricer.calculate(p, method, oas_decimal, state_cache=None)
             row[label] = float(price)
         rows.append(row)
     return pd.DataFrame(rows)
@@ -73,7 +73,7 @@ def price_vs_rate_shift(pricer, scenarios, oas_decimal, rate_shifts_bps):
 
             row = {"rate_shift_bps": float(bps)}
             for label, params, method in scenarios:
-                price, _ = pricer.calculate(params, method, oas_decimal, state_cache=None)
+                price, _, _ = pricer.calculate(params, method, oas_decimal, state_cache=None)
                 row[label] = float(price)
             rows.append(row)
     finally:
@@ -89,7 +89,7 @@ def price_vs_oas(pricer, scenarios, oas_grid_bps):
         oas_decimal = float(bps) / 10000.0
         row = {"oas_bps": float(bps)}
         for label, params, method in scenarios:
-            price, _ = pricer.calculate(params, method, oas_decimal, state_cache=None)
+            price, _, _ = pricer.calculate(params, method, oas_decimal, state_cache=None)
             row[label] = float(price)
         rows.append(row)
     return pd.DataFrame(rows)
